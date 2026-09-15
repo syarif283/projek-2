@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Family</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            text-align: center;
+            color: white;
+
+            background: linear-gradient(
+                135deg,
+                #667eea,
+                #764ba2,
+                #ff758c
+            );
+
+            padding: 60px 20px;
+
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           JUDUL
+        ========================= */
+
+        h1 {
+            font-size: 50px;
+            margin-bottom: 10px;
+
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+
+            animation: muncul 1s ease;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+
+            animation: muncul 1.5s ease;
+        }
+
+        /* =========================
+           TOMBOL
+        ========================= */
+
+        button {
+            background: white;
+            color: #764ba2;
+
+            border: none;
+
+            padding: 14px 30px;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            border-radius: 30px;
+
+            cursor: pointer;
+
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+
+            transition: 0.3s;
+
+            position: relative;
+            z-index: 10;
+        }
+
+        button:hover {
+            transform: translateY(-5px) scale(1.05);
+
+            box-shadow:
+                0 12px 25px rgba(0,0,0,0.35);
+        }
+
+        /* =========================
+           GALERI
+        ========================= */
+
+        #galeri {
+            display: none;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 25px;
+
+            max-width: 1000px;
+
+            margin: 45px auto 0;
+
+            animation: galeriMuncul 0.8s ease;
+
+            position: relative;
+            z-index: 5;
+        }
+
+        /* =========================
+           KARTU FOTO
+        ========================= */
+
+        .foto {
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background: rgba(255,255,255,0.18);
+
+            padding: 8px;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.3);
+
+            transition: 0.4s;
+
+            cursor: pointer;
+
+            backdrop-filter: blur(5px);
+        }
+
+        .foto:hover {
+            transform: translateY(-10px) scale(1.03);
+
+            box-shadow:
+                0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .foto:active {
+            transform: scale(0.97);
+        }
+
+        .foto img {
+            width: 100%;
+
+            height: 230px;
+
+            object-fit: cover;
+
+            border-radius: 15px;
+
+            display: block;
+
+            transition: 0.5s;
+        }
+
+        .foto:hover img {
+            transform: scale(1.1);
+        }
+
+        /* =========================
+           POPUP INFO
+        ========================= */
+
+        .popup {
+            display: none;
+
+            position: fixed;
+
+            z-index: 999;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0,0,0,0.78);
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+
+            backdrop-filter: blur(5px);
+        }
+
+        .popup-content {
+            background: white;
+
+            color: #333;
+
+            width: 90%;
+
+            max-width: 500px;
+
+            padding: 25px;
+
+            border-radius: 25px;
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.6);
+
+            animation: popupMuncul 0.4s ease;
+        }
+
+        /* FOTO DI POPUP */
+
+        .popup-content img {
+            width: 100%;
+
+            max-height: 350px;
+
+            object-fit: cover;
+
+            border-radius: 18px;
+
+            margin-bottom: 20px;
+
+            cursor: zoom-in;
+
+            transition: 0.3s;
+        }
+
+        .popup-content img:hover {
+            transform: scale(1.02);
+        }
+
+        .popup-content h2 {
+            color: #764ba2;
+
+            font-size: 28px;
+
+            margin-bottom: 10px;
+        }
+
+        .popup-content p {
+            color: #555;
+
+            font-size: 16px;
+
+            line-height: 1.6;
+
+            margin-bottom: 20px;
+        }
+
+        .tutup {
+            background: #764ba2;
+
+            color: white;
+
+            padding: 10px 25px;
+        }
+
+        .tutup:hover {
+            background: #5a357d;
+        }
+
+        /* =========================
+           POPUP FOTO BESAR
+        ========================= */
+
+        .zoom {
+            display: none;
+
+            position: fixed;
+
+            z-index: 2000;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0,0,0,0.92);
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 20px;
+
+            cursor: zoom-out;
+        }
+
+        .zoom img {
+            max-width: 95%;
+            max-height: 90%;
+
+            object-fit: contain;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 10px 50px rgba(0,0,0,0.8);
+
+            animation: zoomMuncul 0.4s ease;
+        }
+
+        /* =========================
+           HATI BERJATUHAN
+        ========================= */
+
+        .hati {
+            position: fixed;
+
+            top: -50px;
+
+            color: #ffb6c1;
+
+            font-size: 20px;
+
+            pointer-events: none;
+
+            z-index: 1;
+
+            animation: jatuh linear forwards;
+
+            opacity: 0.8;
+        }
+
+        @keyframes jatuh {
+
+            0% {
+                transform:
+                    translateY(0)
+                    rotate(0deg);
+
+                opacity: 0.9;
+            }
+
+            100% {
+                transform:
+                    translateY(110vh)
+                    rotate(360deg);
+
+                opacity: 0;
+            }
+        }
+
+        /* =========================
+           ANIMASI
+        ========================= */
+
+        @keyframes muncul {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+        @keyframes galeriMuncul {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+        @keyframes popupMuncul {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    scale(0.7);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    scale(1);
+            }
+        }
+
+        @keyframes zoomMuncul {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    scale(0.5);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    scale(1);
+            }
+        }
+
+        /* =========================
+           UNTUK HP
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 45px 15px;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            #galeri {
+                grid-template-columns: 1fr;
+
+                gap: 20px;
+            }
+
+            .foto img {
+                height: 250px;
+            }
+
+            .popup-content {
+                padding: 20px;
+            }
+
+            .popup-content h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- JUDUL -->
+
+    <h1>❤️ My Family ❤️</h1>
+
+    <p class="subtitle">
+        Kumpulan momen indah bersama keluarga
+    </p>
+
+
+    <!-- TOMBOL -->
+
+    <button onclick="tampilkanFoto()" id="tombol">
+        📸 Lihat Foto Keluarga
+    </button>
+
+
+    <!-- GALERI -->
+
+    <div id="galeri">
+
+        <!-- FOTO 1 -->
+
+        <div class="foto" onclick="bukaInfo(
+            'foto 1.jpeg',
+            'Ultah Hilda',
+            'Momen perayaan ulang tahun Hilda bersama keluarga dan teman-teman.'
+        )">
+
+            <img src="foto 1.jpeg" alt="Ultah Hilda">
+
+        </div>
+
+
+        <!-- FOTO 2 -->
+
+        <div class="foto" onclick="bukaInfo(
+            'foto 2.jpeg',
+            'Kumpul di Kia',
+            'Momen kumpul bersama di Kia.'
+        )">
+
+            <img src="foto 2.jpeg" alt="Kumpul di Kia">
+
+        </div>
+
+
+        <!-- FOTO 3 -->
+
+        <div class="foto" onclick="bukaInfo(
+            'foto 3.jpeg',
+            'Latihan Kopdes',
+            'Momen saat melakukan latihan Kopdes bersama.'
+        )">
+
+            <img src="foto 3.jpeg" alt="Latihan Kopdes">
+
+        </div>
+
+
+        <!-- FOTO 4 -->
+
+        <div class="foto" onclick="bukaInfo(
+            'foto 4.jpeg',
+            'Nongki',
+            'Momen nongkrong dan bersantai bersama.'
+        )">
+
+            <img src="foto 4.jpeg" alt="Nongki">
+
+        </div>
+
+
+        <!-- FOTO 5 -->
+
+        <div class="foto" onclick="bukaInfo(
+            'foto 5.jpeg',
+            'Mam Bakso Rumah Nadin',
+            'Momen makan bakso bersama di rumah Nadin.'
+        )">
+
+            <img src="foto 5.jpeg" alt="Mam Bakso Rumah Nadin">
+
+        </div>
+
+
+        <!-- FOTO 6 -->
+
+        <div class="foto" onclick="bukaInfo(
+            'foto 6.jpeg',
+            'Kuliah Umum',
+            'Momen mengikuti kegiatan kuliah umum.'
+        )">
+
+            <img src="foto 6.jpeg" alt="Kuliah Umum">
+
+        </div>
+
+    </div>
+
+
+    <!-- POPUP INFORMASI -->
+
+    <div class="popup" id="popup">
+
+        <div class="popup-content">
+
+            <img
+                id="popupFoto"
+                src=""
+                alt="Foto"
+                onclick="perbesarFoto()"
+            >
+
+            <h2 id="popupJudul"></h2>
+
+            <p id="popupDeskripsi"></p>
+
+            <button
+                class="tutup"
+                onclick="tutupInfo()">
+
+                Tutup
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOTO BESAR -->
+
+    <div
+        class="zoom"
+        id="zoom"
+        onclick="tutupZoom()">
+
+        <img
+            id="zoomFoto"
+            src=""
+            alt="Foto diperbesar">
+
+    </div>
+
+
+    <script>
+
+        /* =========================
+           TAMPILKAN GALERI
+        ========================= */
+
+        function tampilkanFoto() {
+
+            const galeri =
+                document.getElementById("galeri");
+
+            const tombol =
+                document.getElementById("tombol");
+
+            if (galeri.style.display === "grid") {
+
+                galeri.style.display = "none";
+
+                tombol.innerHTML =
+                    "📸 Lihat Foto Keluarga";
+
+            } else {
+
+                galeri.style.display = "grid";
+
+                tombol.innerHTML =
+                    "❌ Tutup Foto";
+            }
+        }
+
+
+        /* =========================
+           BUKA INFORMASI FOTO
+        ========================= */
+
+        function bukaInfo(
+            foto,
+            judul,
+            deskripsi
+        ) {
+
+            document.getElementById(
+                "popupFoto"
+            ).src = foto;
+
+            document.getElementById(
+                "popupJudul"
+            ).innerText = judul;
+
+            document.getElementById(
+                "popupDeskripsi"
+            ).innerText = deskripsi;
+
+            document.getElementById(
+                "popup"
+            ).style.display = "flex";
+        }
+
+
+        /* =========================
+           TUTUP INFORMASI
+        ========================= */
+
+        function tutupInfo() {
+
+            document.getElementById(
+                "popup"
+            ).style.display = "none";
+        }
+
+
+        /* =========================
+           PERBESAR FOTO
+        ========================= */
+
+        function perbesarFoto() {
+
+            const foto =
+                document.getElementById(
+                    "popupFoto"
+                ).src;
+
+            document.getElementById(
+                "zoomFoto"
+            ).src = foto;
+
+            document.getElementById(
+                "zoom"
+            ).style.display = "flex";
+        }
+
+
+        /* =========================
+           TUTUP FOTO BESAR
+        ========================= */
+
+        function tutupZoom() {
+
+            document.getElementById(
+                "zoom"
+            ).style.display = "none";
+        }
+
+
+        /* =========================
+           TUTUP POPUP DENGAN KLIK LUAR
+        ========================= */
+
+        document.getElementById(
+            "popup"
+        ).addEventListener(
+            "click",
+            function(event) {
+
+                if (event.target === this) {
+
+                    tutupInfo();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           EFEK HATI BERJATUHAN
+        ========================= */
+
+        function buatHati() {
+
+            const hati =
+                document.createElement("div");
+
+            hati.classList.add("hati");
+
+            hati.innerHTML = "❤️";
+
+            hati.style.left =
+                Math.random() * 100 + "vw";
+
+            hati.style.fontSize =
+                (Math.random() * 20 + 10) + "px";
+
+            hati.style.animationDuration =
+                (Math.random() * 4 + 4) + "s";
+
+            document.body.appendChild(hati);
+
+
+            setTimeout(function() {
+
+                hati.remove();
+
+            }, 8000);
+        }
+
+
+        /* Membuat hati setiap beberapa saat */
+
+        setInterval(buatHati, 600);
+
+
+    </script>
+
+</body>
+</html>
